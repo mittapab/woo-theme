@@ -1,5 +1,6 @@
 <?php
 require get_template_directory() . '/include/setup-theme.php';   
+
 function theme_script_style(){
 
     // style
@@ -27,3 +28,4 @@ function theme_script_style(){
 }
 
 add_action('wp_enqueue_scripts' , 'theme_script_style');
+

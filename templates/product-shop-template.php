@@ -1,6 +1,7 @@
 <?php
 
 /** Template Name: kral Product Shop */
+require get_template_directory() . '/library/library.php';   
 
 get_header();   
 
@@ -209,7 +210,6 @@ get_header();
 
                             <div class="widget recommended">
                                 <h6 class="widget-title mb-30">Recommended</h6>
-
                                 <div class="widget-desc">
                                     <!-- Single Recommended Product -->
                                     <div class="single-recommended-product d-flex mb-30">
@@ -222,6 +222,7 @@ get_header();
                                         </div>
                                     </div>
                                     <!-- Single Recommended Product -->
+                                    
                                     <div class="single-recommended-product d-flex mb-30">
                                         <div class="single-recommended-thumb mr-3">
                                             <img src="<?php echo get_theme_file_uri('img/product-img/product-11.jpg');?>" alt="">
@@ -231,6 +232,7 @@ get_header();
                                             <p>$ 19.99</p>
                                         </div>
                                     </div>
+                        
                                     <!-- Single Recommended Product -->
                                     <div class="single-recommended-product d-flex">
                                         <div class="single-recommended-thumb mr-3">
@@ -245,8 +247,9 @@ get_header();
                             </div>
                         </div>
                     </div>
-
+                  
                     <div class="col-12 col-md-8 col-lg-9">
+                    <?php    catalog_ordering();  ?><br>
                         <div class="shop_grid_product_area">
                             <div class="row">
                             <div class="col-12 col-sm-6 col-lg-4 single_gallery_item wow fadeInUpBig" data-wow-delay="1s">
@@ -266,21 +269,37 @@ get_header();
                                     </div>
                                 </div>
                                 <?php   
-                                
+                                $order_by = (!empty($_GET['orderby'])) ? $_GET['orderby']:'';
+                                if( $order_by == "price"){
+                                    $meta_key = '_regular_price';
+                                    $order = 'ASC';
+                                }else if($order_by == 'price-desc'){
+                                    $meta_key = '_regular_price';
+                                    $order = 'DESC';
+                                }else if($order_by == 'rating'){
+                                    $meta_key = '_wc_average_rating';
+                                    $order = 'DESC';
+                                }
+
+
                                 $args = array(
-                                    'post_type' => 'product'
+                                    'post_type' => 'product',
+                                    'meta_key' =>  $meta_key,
+                                    'order_by' => 'meta_key',
+                                    'order' =>  $order
                                 );
                                 
                                 $query_product = new WP_Query($args);
-                               
+                                
                                 if($query_product->have_posts()){
                                     while($query_product->have_posts()): $query_product->the_post(); 
                                     global $product;
                                     $id = get_the_id();
                                     
                                     ?>
-          
+                                  
                                     <div class="col-12 col-sm-6 col-lg-4 single_gallery_item wow fadeInUpBig" data-wow-delay="1s">
+                                    <a href="<?php the_permalink();  ?>" >
                                     <!-- Product Image -->
                                     <div class="product-img">
                                         <img src="<?php echo get_the_post_thumbnail_url();?>" alt="">
@@ -315,8 +334,9 @@ get_header();
                                         ?>
                                         <!-- </a> -->
                                     </div>
+                                    </a>
                                 </div>
-
+                        
 
                                 <?php
                                     endwhile;
